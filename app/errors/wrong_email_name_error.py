@@ -1,0 +1,2 @@
+class WrongEmailNameError(Exception):
+    pass

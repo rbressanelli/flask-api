@@ -1,0 +1,2 @@
+class EmailUpdateError(Exception):
+    pass

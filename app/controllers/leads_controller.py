@@ -10,7 +10,8 @@ from app.services.auxiliar_functions import (
     phone_check, 
     keys_check, 
     check_update_request,   
-    valid_email_checker 
+    valid_email_checker,
+    format_name_email 
     )
 from app.errors import (
     EmailUpdateError, 
@@ -28,10 +29,12 @@ def create_new_lead():
     try:
         keys_check(new_lead)
         valid_email_checker(new_lead.get('email'))
+        phone_check(new_lead.get('phone'))
+        
         new_lead['creation_date'] = date_maker()
         new_lead['last_visit'] = date_maker()
-    
-        phone_check(new_lead.get('phone'))
+        new_lead = format_name_email(new_lead)
+        
         new_lead_data = LeadsModel(**new_lead)
         
         session.add(new_lead_data)    
@@ -59,7 +62,12 @@ def create_new_lead():
 
     except KeyError as err:        
         return jsonify({
-                "error": str(err)
+                "error": str(err),
+                "Fields": {
+                    'name': '',
+                    "email": '',
+                    "phone": ''
+                }
             }), HTTPStatus.BAD_REQUEST
 
     except NoStringError as err:
@@ -148,7 +156,7 @@ def delete_lead():
         
     except KeyError:
         return {
-            "error": "The correct field name is 'emai'."
+            "error": "The correct field name is 'email'."
         }, HTTPStatus.BAD_REQUEST
         
     except AttributeError:

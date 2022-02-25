@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, DateTime, Integer
 from dataclasses import dataclass
+
+from sqlalchemy import Column, DateTime, Integer, String
 
 from app.configs.database import db
 
